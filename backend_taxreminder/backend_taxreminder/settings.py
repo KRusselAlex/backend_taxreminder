@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from dotenv import load_dotenv
+# Load the environment variables from the .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -175,8 +178,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "kouawoualex1234@gmail.com"
-EMAIL_HOST_PASSWORD = "dfcyoxqrxdcbjyuh"
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD =  os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Use Redis as the message broker
@@ -190,6 +193,6 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
 #twillo
-TWILIO_ACCOUNT_SID="AC754ba427992af96eff172942fada96f3"
-TWILIO_AUTH_TOKEN="5aed8c33062a66d940ed74cc8ac0c27a"
-TWILIO_PHONE_NUMBER="+13653633350"
+TWILIO_ACCOUNT_SID=os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN=os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER=os.getenv('TWILIO_PHONE_NUMBER')

@@ -31,7 +31,10 @@ SECRET_KEY = 'django-insecure-r(%k_c_s@bx=6)br9gwlu*79=xr)x20la7(6=yrrq@b#@%ga#p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ["backend-taxreminder.onrender.com" , '198.211.99.20', 'localhost', '127.0.0.1']
+
+
 
 
 # Application definition

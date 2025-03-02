@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-r(%k_c_s@bx=6)br9gwlu*79=xr)x20la7(6=yrrq@b#@%ga#p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 ALLOWED_HOSTS = ["backend-taxreminder.onrender.com" , '198.211.99.20', 'localhost', '127.0.0.1']
@@ -200,3 +200,7 @@ CELERY_TASK_SERIALIZER = 'json'
 TWILIO_ACCOUNT_SID=os.getenv('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN=os.getenv('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER=os.getenv('TWILIO_PHONE_NUMBER')
+
+SECURE_SSL_REDIRECT = True
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')

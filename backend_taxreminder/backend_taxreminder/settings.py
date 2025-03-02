@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'celery',
     'reports',
     'clients'
 ]
@@ -188,6 +189,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Use Redis as the message broker
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # Timezone for Celery
 CELERY_TIMEZONE = 'UTC'
@@ -201,7 +203,7 @@ TWILIO_ACCOUNT_SID=os.getenv('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN=os.getenv('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER=os.getenv('TWILIO_PHONE_NUMBER')
 
-SECURE_SSL_REDIRECT = True
+# SECURE_SSL_REDIRECT = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 

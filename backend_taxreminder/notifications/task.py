@@ -74,6 +74,8 @@ def send_sms_reminder(client_id):
         from_=settings.TWILIO_PHONE_NUMBER,
         to=client.telephone_number
     )
+    
+    print(message,"message twillo")
 
     # Create a record for this notification in the database
     Notification.objects.create(client=client, notification_type='sms', status='sent')

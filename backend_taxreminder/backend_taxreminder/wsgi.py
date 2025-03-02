@@ -10,11 +10,12 @@ https://docs.djangoproject.com/en/4.1/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
-from whitenoise.django import DjangoWhiteNoise
+from django.contrib.staticfiles.handlers import StaticFilesHandler
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend_taxreminder.settings')
 
-application = get_wsgi_application()
-application = DjangoWhiteNoise(application)
+# application = get_wsgi_application()
+application = StaticFilesHandler(get_wsgi_application())
+# application = DjangoWhiteNoise(application)
 
 

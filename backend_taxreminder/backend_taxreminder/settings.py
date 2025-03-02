@@ -204,3 +204,4 @@ TWILIO_PHONE_NUMBER=os.getenv('TWILIO_PHONE_NUMBER')
 SECURE_SSL_REDIRECT = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+

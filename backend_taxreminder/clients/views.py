@@ -1,5 +1,6 @@
 from rest_framework import generics, status
 from drf_yasg.utils import swagger_auto_schema
+from django.http import Http404
 from .permissions import CustomIsAuthenticated
 from .serializers import ClientSerializer
 from .models import Client
@@ -142,22 +143,22 @@ class ClientDetailView(generics.RetrieveUpdateDestroyAPIView):
             404: "Client not found",
         }
     )
-    def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
-
     def destroy(self, request, *args, **kwargs):
         try:
-            response = super().retrieve(request, *args, **kwargs)
-        except:
+            response = super().destroy(request, *args, **kwargs)
+        except Http404: 
             return format_response(
-            errors={'detail': 'Client not found'},
-            message="Client not found",
-            status_code=status.HTTP_404_NOT_FOUND,
-            success=False 
-        )
+                errors={'detail': 'Client not found'},
+                message="Client not found",
+                status_code=status.HTTP_404_NOT_FOUND,
+                success=False
+            )
+
         if response.status_code == 204:
             return format_response(
                 message="Client deleted successfully",
                 status_code=status.HTTP_204_NO_CONTENT,
                 success=True
             )
+
+        return response

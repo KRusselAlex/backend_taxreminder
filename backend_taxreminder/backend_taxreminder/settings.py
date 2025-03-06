@@ -101,15 +101,19 @@ WSGI_APPLICATION = 'backend_taxreminder.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'mydatabase',
+#         'USER': 'alex',
+#         'PASSWORD': 'mypassword',
+#         'HOST': 'localhost', 
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydatabase',
-        'USER': 'alex',
-        'PASSWORD': 'mypassword',
-        'HOST': 'localhost', 
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse("postgresql://alex:pFgxmCdCNNALlVkisvMuAOBewWkl6ZK8@dpg-cv20acl6l47c73fjo3b0-a.oregon-postgres.render.com/mydatabase_h6id")
 }
 
 DATABASES['default'] = dj_database_url.parse("postgresql://alex:pFgxmCdCNNALlVkisvMuAOBewWkl6ZK8@dpg-cv20acl6l47c73fjo3b0-a.oregon-postgres.render.com/mydatabase_h6id")
@@ -161,7 +165,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),  # Example: 120 minutes for access token
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # Example: 120 minutes for access token
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Example: 7 days for refresh token
     'ROTATE_REFRESH_TOKENS': False,  # Optionally disable refresh token rotation
     'BLACKLIST_AFTER_ROTATION': False,  # Optionally enable token blacklisting after rotation
@@ -192,7 +196,8 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # Timezone for Celery
-CELERY_TIMEZONE = 'UTC'
+CELERY_TIMEZONE = 'America/Toronto'
+
 
 # Celery Task Serialization
 CELERY_ACCEPT_CONTENT = ['json']

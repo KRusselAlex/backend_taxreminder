@@ -22,6 +22,7 @@ def send_report_to_user(client, report):
         "Best regards,\n"
         "Madame Alexandré"
     )
+
     email = EmailMessage(
         subject="Your Tax Report",
         body=email_body,
@@ -29,5 +30,9 @@ def send_report_to_user(client, report):
         to=[client.email],
         connection=connection
     )
-    email.attach(report.file.name, report.file.read(), "application/pdf")
+
+    # ✅ Ensure the file is read as binary
+    with open(report.file.path, "rb") as pdf_file:
+        email.attach(report.file.name, pdf_file.read(), "application/pdf")
+
     email.send()

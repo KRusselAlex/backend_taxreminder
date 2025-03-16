@@ -42,6 +42,7 @@ class ReportListCreateView(generics.ListCreateAPIView):
         client = get_object_or_404(Client, id=client_id)  # Look up the client from the database
         
         serializer = self.get_serializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
             report = serializer.save(clients=client)  # Assign the client to the report
 

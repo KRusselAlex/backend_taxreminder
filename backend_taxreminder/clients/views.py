@@ -25,26 +25,39 @@ class ClientCreateView(generics.ListCreateAPIView):
     )
     def post(self, request, *args, **kwargs):
         # Use the serializer to validate and handle errors
-        multiple = isinstance(request.data, list)  # Check if the request contains a list
-        serializer = ClientSerializer(data=request.data, many=multiple)
+        try:
+            
+            multiple = isinstance(request.data, list)  # Check if the request contains a list
+            serializer = ClientSerializer(data=request.data, many=multiple)
 
-        if serializer.is_valid():
-            # If the serializer is valid, create the client
-            serializer.save()
+            print(request.data)
+
+            if serializer.is_valid():
+                # If the serializer is valid, create the client
+                serializer.save()
+                return format_response(
+                    data=serializer.data,
+                    message="Client created successfully",
+                    status_code=status.HTTP_201_CREATED,
+                    success=True
+                )
+            # If invalid, return the error messages directly from the serializer
             return format_response(
-                data=serializer.data,
-                message="Client created successfully",
-                status_code=status.HTTP_201_CREATED,
-                success=True
+                errors=serializer.errors,
+                message="Client registration failed",
+                status_code=status.HTTP_400_BAD_REQUEST,
+                success=False  # Indicating failure
             )
-        # If invalid, return the error messages directly from the serializer
-        return format_response(
-            errors=serializer.errors,
-            message="Client registration failed",
-            status_code=status.HTTP_400_BAD_REQUEST,
-            success=False  # Indicating failure
-        )
-        
+        except Exception as e:
+      
+            return format_response(
+                data=[],
+                message="An error occurred while retrieving clients.",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False,
+                errors= str(e)
+            )
+
     @swagger_auto_schema(
         operation_description="Retrieve a list of all clients. Requires authentication.",
         responses={
@@ -54,14 +67,24 @@ class ClientCreateView(generics.ListCreateAPIView):
     )
     
     def get(self, request, *args, **kwargs):
-        clients = self.get_queryset()
-        serializer = self.get_serializer(clients, many=True)
-        return format_response(
-            data = serializer.data ,
-            message="Client list retrieved successfully",
-            status_code=status.HTTP_200_OK,
-            success=True
-        )
+        try:
+            clients = self.get_queryset()
+            serializer = self.get_serializer(clients, many=True)
+            return format_response(
+                data=serializer.data,
+                message="Client list retrieved successfully",
+                status_code=status.HTTP_200_OK,
+                success=True
+            )
+        except Exception as e:
+      
+            return format_response(
+                data=serializer.data,
+                message="An error occurred while retrieving clients.",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False,
+                errors= str(e)
+            )
 
 
 class ClientDetailView(generics.RetrieveUpdateDestroyAPIView):

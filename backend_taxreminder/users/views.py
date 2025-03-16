@@ -62,23 +62,37 @@ class LoginView(APIView):
     
    
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            user_data = serializer.validated_data  # This will contain email, access, refresh tokens
+        try:
+            serializer = LoginSerializer(data=request.data)
+            print(request.data)
+            print(request.method)
+            if serializer.is_valid():
+                user_data = serializer.validated_data  # This will contain email, access, refresh tokens
+                return format_response(
+                    data=user_data,
+                    message="Login successful",
+                    status_code=status.HTTP_200_OK,
+                    success=True
+                )
+            
             return format_response(
-                data=user_data,
-                message="Login successful",
-                status_code=status.HTTP_200_OK,
-                success=True
+                errors=serializer.errors,
+                message="Login failed",
+                status_code=status.HTTP_400_BAD_REQUEST,
+                success=False  # Indicating failure
             )
-        
-        return format_response(
-            errors=serializer.errors,
-            message="Login failed",
-            status_code=status.HTTP_400_BAD_REQUEST,
-            success=False  # Indicating failure
-        )
 
+        except Exception as e:
+            # You could log the exception here
+            print(e)
+            return format_response(
+                errors="Database error",
+                message="Login failed",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False  # Indicating failure
+            )
+
+                
 
 class UserListView(generics.ListAPIView):
     """

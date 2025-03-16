@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-r(%k_c_s@bx=6)br9gwlu*79=xr)x20la7(6=yrrq@b#@%ga#p
 DEBUG = False
 
 
-ALLOWED_HOSTS = ["backend-taxreminder.onrender.com" , '198.211.99.20', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ["backend-taxreminder.onrender.com" , '198.211.99.20', 'localhost', '127.0.0.1','http://localhost:5173']
 
 
 
@@ -62,12 +62,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+
 ]
 
 ROOT_URLCONF = 'backend_taxreminder.urls'
@@ -113,10 +114,10 @@ WSGI_APPLICATION = 'backend_taxreminder.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse("postgresql://alex:pFgxmCdCNNALlVkisvMuAOBewWkl6ZK8@dpg-cv20acl6l47c73fjo3b0-a.oregon-postgres.render.com/mydatabase_h6id")
+    'default': dj_database_url.parse("postgresql://alex:bCr9FF1PBBSzPvMvJH4gtDZ5EsRpRr8X@dpg-cv8nuk9u0jms739d58m0-a.oregon-postgres.render.com/mydatabase_wyud")
 }
 
-DATABASES['default'] = dj_database_url.parse("postgresql://alex:pFgxmCdCNNALlVkisvMuAOBewWkl6ZK8@dpg-cv20acl6l47c73fjo3b0-a.oregon-postgres.render.com/mydatabase_h6id")
+DATABASES['default'] = dj_database_url.parse("postgresql://alex:bCr9FF1PBBSzPvMvJH4gtDZ5EsRpRr8X@dpg-cv8nuk9u0jms739d58m0-a.oregon-postgres.render.com/mydatabase_wyud")
 # postgresql://alex:pFgxmCdCNNALlVkisvMuAOBewWkl6ZK8@dpg-cv20acl6l47c73fjo3b0-a.oregon-postgres.render.com/mydatabase_h6id
 
 
@@ -162,7 +163,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # The origin of your frontend app
+]
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # Example: 120 minutes for access token
@@ -212,3 +219,13 @@ TWILIO_PHONE_NUMBER=os.getenv('TWILIO_PHONE_NUMBER')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+#cache settings
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Change this if using a different Redis setup
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}

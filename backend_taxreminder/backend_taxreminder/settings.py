@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-r(%k_c_s@bx=6)br9gwlu*79=xr)x20la7(6=yrrq@b#@%ga#p
 DEBUG = False
 
 
-ALLOWED_HOSTS = ["backend-taxreminder.onrender.com" , '198.211.99.20', 'localhost', '127.0.0.1','http://localhost:5173']
+ALLOWED_HOSTS = ["backend-taxreminder.onrender.com" "https://account-easy.vercel.app/", '198.211.99.20', 'localhost', '127.0.0.1','http://localhost:5173']
 
 
 
@@ -168,7 +168,8 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Local frontend
     "https://your-frontend-domain.com",  # Production frontend domain
-    "https://backend-taxreminder.onrender.com",  # Ensure backend allows itself
+    "https://backend-taxreminder.onrender.com", 
+    "https://account-easy.vercel.app/"# Ensure backend allows itself
 ]
 
 CORS_ALLOW_CREDENTIALS = True

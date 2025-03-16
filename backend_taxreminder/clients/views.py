@@ -30,7 +30,7 @@ class ClientCreateView(generics.ListCreateAPIView):
             multiple = isinstance(request.data, list)  # Check if the request contains a list
             serializer = ClientSerializer(data=request.data, many=multiple)
 
-            print(request.data)
+            print(request.data, request.method)
 
             if serializer.is_valid():
                 # If the serializer is valid, create the client

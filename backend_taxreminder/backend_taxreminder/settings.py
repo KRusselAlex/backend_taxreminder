@@ -162,14 +162,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_ALL_ORIGINS = True
-
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = False  
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # The origin of your frontend app
+    "http://localhost:5173",  # Local frontend
+    "https://your-frontend-domain.com",  # Production frontend domain
+    "https://backend-taxreminder.onrender.com",  # Ensure backend allows itself
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = False  # Make sure this is False
+CORS_ALLOW_ALL_ORIGINS = False  # Remove this line if it's redundant
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # Example: 120 minutes for access token

@@ -43,11 +43,16 @@ class ReportListCreateView(generics.ListCreateAPIView):
         
         serializer = self.get_serializer(data=request.data)
         print(request.data)
+        
         if serializer.is_valid():
             report = serializer.save(clients=client)  # Assign the client to the report
 
             # Send email with report attachment
             send_report_to_user(client, report)
+
+            # Update client sent_report field to True
+            client.report_sent = True
+            client.save(update_fields=["report_sent"])  # Save only the changed field
 
             return format_response(
                 data=serializer.data,

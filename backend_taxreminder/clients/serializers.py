@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueValidator
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ['id', 'full_name', 'email', 'telephone_number']
+        fields = ['id', 'full_name', 'email', 'telephone_number','report_sent', 'type_client']
         extra_kwargs = {
             'email': {'validators': [UniqueValidator(queryset=Client.objects.all())]},
             'telephone_number': {'validators': [UniqueValidator(queryset=Client.objects.all())]},

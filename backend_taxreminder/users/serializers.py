@@ -8,7 +8,7 @@ from rest_framework.validators import UniqueValidator
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'password']
+        fields = ['email', 'username', 'password']
         extra_kwargs = {
             'password': {'write_only': True},
             'email': {'validators': [UniqueValidator(queryset=User.objects.all())]}  # Ensure email is unique
@@ -53,8 +53,7 @@ class LoginSerializer(serializers.Serializer):
             print("refresh:",refresh)
             print("access:",refresh.access_token)
             return {
-                'first_name': user.first_name,
-                'last_name': user.last_name,
+                'username': user.username,
                 'email': user.email,
                 'access': str(refresh.access_token),
                 'refresh': str(refresh),

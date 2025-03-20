@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # added apps
+    'django_extensions',
     'users',
     "corsheaders",
     'notifications',
@@ -114,11 +115,11 @@ WSGI_APPLICATION = 'backend_taxreminder.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse("postgresql://alex:bCr9FF1PBBSzPvMvJH4gtDZ5EsRpRr8X@dpg-cv8nuk9u0jms739d58m0-a.oregon-postgres.render.com/mydatabase_wyud")
+    'default': dj_database_url.parse("postgresql://alex:Pf6pfilXP3QoKVeElCerwskXSymAbikp@dpg-cvduio3tq21c73e9dl8g-a.oregon-postgres.render.com/mydatabase_gj59")
 }
 
-DATABASES['default'] = dj_database_url.parse("postgresql://alex:bCr9FF1PBBSzPvMvJH4gtDZ5EsRpRr8X@dpg-cv8nuk9u0jms739d58m0-a.oregon-postgres.render.com/mydatabase_wyud")
-# postgresql://alex:pFgxmCdCNNALlVkisvMuAOBewWkl6ZK8@dpg-cv20acl6l47c73fjo3b0-a.oregon-postgres.render.com/mydatabase_h6id
+DATABASES['default'] = dj_database_url.parse("postgresql://alex:Pf6pfilXP3QoKVeElCerwskXSymAbikp@dpg-cvduio3tq21c73e9dl8g-a.oregon-postgres.render.com/mydatabase_gj59")
+
 
 
 

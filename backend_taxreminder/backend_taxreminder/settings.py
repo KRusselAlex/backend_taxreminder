@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # added apps
-    'django_extensions',
     'users',
     "corsheaders",
     'notifications',

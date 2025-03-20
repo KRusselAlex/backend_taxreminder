@@ -16,13 +16,12 @@ def send_email_reminder(client_id):
     """
     client = Client.objects.get(id=client_id)
     subject = "Tax Payment Reminder"
-    message = f"Dear {client.full_name}, just tp remind you to pay your task."
+    message = f"Dear {client.last_name}, just tp remind you to pay your tax."
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [client.email])
     
     # Create a record for this notification in the database
     Notification.objects.create(client=client, notification_type='email', status='sent')
     return f"Email sent to {client.email}"
-
 @shared_task
 def send_sms_reminder(client_id):
     """
@@ -33,7 +32,7 @@ def send_sms_reminder(client_id):
     
     # Send SMS to the client
     message = client_twilio.messages.create(
-        body=f"Reminder: Your to pay your tax",
+        body=f"Dear {client.last_name}, just to remind you to pay your tax before due date.",
         from_=settings.TWILIO_PHONE_NUMBER,
         to=client.telephone_number
     )

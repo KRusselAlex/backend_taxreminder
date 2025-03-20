@@ -13,15 +13,24 @@ def send_report_to_user(client, report):
         use_tls=True
     )
 
-    sender_name = "Madame Alexandré"
+    sender_name = "Madame Toumno"
     from_email = f"{sender_name} <{settings.DEFAULT_FROM_EMAIL}>"
-    email_body = (
-        "Dear valued client,\n\n"
-        "Thank you for trusting us with your business. Attached is your tax report for this period.\n\n"
-        "If you have any questions or require further assistance, feel free to reach out to us. We appreciate your continued partnership and look forward to working with you in the future.\n\n"
-        "Best regards,\n"
-        "Madame Alexandré"
-    )
+    email_body =  f"""
+    <html>
+        <body>
+            <p>Dear {client.first_name} {client.last_name},</p>
+
+            <p>Thank you for trusting us with your business. Attached is your tax report for this period.</p>
+
+            <p>If you have any questions or require further assistance, feel free to reach out to us. We appreciate your continued partnership and look forward to working with you in the future.</p>
+
+            <p>Best regards,<br>
+            {sender_name}</p>
+        </body>
+    </html>
+    """
+    
+
 
     email = EmailMessage(
         subject="Your Tax Report",
@@ -31,8 +40,11 @@ def send_report_to_user(client, report):
         connection=connection
     )
 
-    # ✅ Ensure the file is read as binary
+    email.content_subtype = "html"
+
     with open(report.file.path, "rb") as pdf_file:
         email.attach(report.file.name, pdf_file.read(), "application/pdf")
+   
 
+    # Send the email
     email.send()

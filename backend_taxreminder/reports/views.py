@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from .permissions import CustomIsAuthenticated
@@ -38,35 +39,46 @@ class ReportListCreateView(generics.ListCreateAPIView):
             404: "reports not found"}
     )
     def post(self, request, *args, **kwargs):
-        client_id = request.data.get("clients")  # Get client ID from request data
-        client = get_object_or_404(Client, id=client_id)  # Look up the client from the database
-        
-        serializer = self.get_serializer(data=request.data)
-        print(request.data)
-        
-        if serializer.is_valid():
-            report = serializer.save(clients=client)  # Assign the client to the report
+        try:      
+            client_id = request.data.get("clients")  # Get client ID from request data
+            client = get_object_or_404(Client, id=client_id)  # Look up the client from the database
+            
+            serializer = self.get_serializer(data=request.data)
+            print(request.data)
+            
+            if serializer.is_valid():
+                report = serializer.save(clients=client)  # Assign the client to the report
 
-            # Send email with report attachment
-            send_report_to_user(client, report)
+                # Send email with report attachment
+                send_report_to_user(client, report)
 
-            # Update client sent_report field to True
-            client.report_sent = True
-            client.save(update_fields=["report_sent"])  # Save only the changed field
+                # Update client sent_report field to True
+                client.report_sent = True
+                client.date_report_sent = datetime.now()
+                client.save(update_fields=["report_sent","date_report_sent"])  # Save only the changed field
+
+                return format_response(
+                    data=serializer.data,
+                    message="Report sent successfully",
+                    status_code=status.HTTP_201_CREATED,
+                    success=True
+                )
 
             return format_response(
-                data=serializer.data,
-                message="Report sent successfully",
-                status_code=status.HTTP_201_CREATED,
-                success=True
+                errors=serializer.errors,
+                message="Failed to send report",
+                status_code=status.HTTP_400_BAD_REQUEST,
+                success=False
+            )   
+        except Exception as e:
+      
+            return format_response(
+                data=[],
+                message="An error occurred while retrieving clients.",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                success=False,
+                errors= str(e)
             )
-
-        return format_response(
-            errors=serializer.errors,
-            message="Failed to send report",
-            status_code=status.HTTP_400_BAD_REQUEST,
-            success=False
-        )
 
 class ReportDetailView(generics.RetrieveUpdateDestroyAPIView):
     """

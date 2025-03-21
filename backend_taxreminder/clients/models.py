@@ -6,7 +6,7 @@ class Client(models.Model):
     Street_address = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     province = models.CharField(max_length=255)
-    postal_code = models.CharField(max_length=6)
+    postal_code = models.CharField(max_length=255)
     country = models.CharField(max_length=255, default='Canada')
     email = models.EmailField(unique=True)
     telephone_number = models.CharField(max_length=15, unique=True)

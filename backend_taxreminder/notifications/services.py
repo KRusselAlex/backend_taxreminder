@@ -35,8 +35,6 @@ def send_email_reminder(client_id):
     </html>
     """
     
-
-
     email = EmailMessage(
         subject="Your Tax Payment Reminder",
         body=email_body,

@@ -114,12 +114,8 @@ WSGI_APPLICATION = 'backend_taxreminder.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse("postgresql://alex:Pf6pfilXP3QoKVeElCerwskXSymAbikp@dpg-cvduio3tq21c73e9dl8g-a.oregon-postgres.render.com/mydatabase_gj59")
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
 }
-
-DATABASES['default'] = dj_database_url.parse("postgresql://alex:Pf6pfilXP3QoKVeElCerwskXSymAbikp@dpg-cvduio3tq21c73e9dl8g-a.oregon-postgres.render.com/mydatabase_gj59")
-
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -203,8 +199,13 @@ EMAIL_HOST_PASSWORD =  os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Use Redis as the message broker
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+ENVIRONMENT=os.getenv('ENVIRONMENT')
+if ENVIRONMENT == "dev" :
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+else:
+    CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+    CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 
 # Timezone for Celery
 CELERY_TIMEZONE = 'America/Toronto'
@@ -227,9 +228,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',  # Change this if using a different Redis setup
+        'LOCATION': 'redis://127.0.0.1:6379/1', 
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
 }
+

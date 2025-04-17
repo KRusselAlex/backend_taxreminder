@@ -88,8 +88,8 @@ Make sure you have the following installed:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/atax-reminder-backend.git
-cd atax-reminder-backend
+git clone https://github.com/KRusselAlex/backend_taxreminder.git
+cd backend_taxreminder
 ```
 
 ### 2. Create and activate a virtual environment

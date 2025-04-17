@@ -1,20 +1,26 @@
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![DjangoREST](https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray)
+![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
+
 
 # 📧 Atax Reminder Backend
 
-Atax Reminder is a backend service designed to automate the sending of payment reminders to clients via **Email** and **SMS**. It is built using **Django** and leverages **Celery** and **Redis** for asynchronous task processing and periodic task scheduling using **Celery Beat**. **Twilio** is used to send SMS reminders, and **Gmail SMTP** is used for sending emails. PostgreSQL is the main database.
+Atax Reminder is a backend service built to automate and schedule **payment reminders** via **Email** and **SMS**. It offers a robust RESTful API using **Django REST Framework** for client and reminder management. The system handles background jobs using **Celery** and **Celery Beat**, powered by **Redis**. PostgreSQL serves as the primary database. **Twilio** is used for SMS delivery and **Gmail SMTP** for emails.
 
 ---
 
 ## 🚀 Tech Stack
 
-- **Django** – Backend web framework
-- **Celery** – Task queue for background jobs
-- **Celery Beat** – Scheduler for periodic tasks
-- **Redis** – Message broker and result backend
+- **Django** – High-level Python web framework
+- **Django REST Framework (DRF)** – Powerful toolkit for building Web APIs
+- **Celery** – Asynchronous task processing
+- **Celery Beat** – Scheduler for periodic jobs
+- **Redis** – Message broker & result backend
 - **PostgreSQL** – Relational database
 - **Twilio** – SMS reminder service
-- **Gmail SMTP** – For sending email reminders
-- **Docker** (optional) – For easier deployment
+- **Gmail SMTP** – Email reminders
+- **Docker** (optional) – For containerized development
 
 ---
 
@@ -23,16 +29,18 @@ Atax Reminder is a backend service designed to automate the sending of payment r
 ```
 atax_reminder/
 │
-├── atax_reminder/       # Django project root
+├── atax_reminder/       # Django project config
 │   ├── settings.py
 │   ├── celery.py
 │   └── __init__.py
 │
-├── reminders/           # App with task logic
+├── reminders/           # Core app
 │   ├── models.py
-│   ├── tasks.py         # Email & SMS tasks
-│   ├── views.py
-│   └── utils.py         # (Optional) SMS/Email utilities
+│   ├── serializers.py   # DRF serializers
+│   ├── views.py         # API views
+│   ├── urls.py          # API routes
+│   ├── tasks.py         # Celery tasks for email/SMS
+│   └── admin.py
 │
 ├── manage.py
 ├── requirements.txt
@@ -43,12 +51,12 @@ atax_reminder/
 
 ## 🧰 Prerequisites
 
-Ensure you have the following installed:
+Make sure you have the following installed:
 
 - Python 3.10+
 - PostgreSQL
 - Redis
-- pip / virtualenv or pipenv
+- pip or virtualenv / pipenv
 - (Optional) Docker & Docker Compose
 
 ---
@@ -75,46 +83,46 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+> Make sure `djangorestframework`, `celery`, `redis`, `twilio`, and `python-dotenv` are listed in your `requirements.txt`.
+
 ### 4. Set environment variables
 
-Create a `.env` file in your root directory and add the following:
+Create a `.env` file:
 
 ```env
-# Email configuration (Gmail SMTP)
+# Email (Gmail)
 EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
 
-# Twilio SMS Configuration
+# Twilio
 TWILIO_ACCOUNT_SID=
 TWILIO_AUTH_TOKEN=
 TWILIO_PHONE_NUMBER=
 
-# Environment setting
+# General
 ENVIRONMENT=dev
 
-# PostgreSQL Database
+# PostgreSQL
 DATABASE_URL=
 
-# Redis (Celery Broker & Backend)
+# Redis (for Celery)
 CELERY_BROKER_URL=
 CELERY_RESULT_BACKEND=
 ```
 
-> **Warning:** For production, never expose your credentials in public repos.
-
-### 5. Apply database migrations
+### 5. Run migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 6. Create a superuser (optional)
+### 6. Create superuser (optional)
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 7. Run the development server
+### 7. Start the development server
 
 ```bash
 python manage.py runserver
@@ -122,17 +130,41 @@ python manage.py runserver
 
 ---
 
+## 🧪 API Usage
+
+Django REST Framework is used to expose the API for interacting with reminders and clients.
+
+### Example Endpoints
+
+| Method | Endpoint              | Description                |
+|--------|-----------------------|----------------------------|
+| GET    | `/api/notifications/` | List all reminders         |
+| POST   | `/api/notifications/` | Create new reminder        |
+| GET    | `/api/clients/`       | List all clients           |
+| POST   | `/api/clients/`       | Add a new client           |
+| POST   | `/api/reports/`       | send a new reports via mail|
+
+
+
+> All endpoints are powered by **DRF ViewSets** and **Serializers**.
+
+---
+
 ## ⚙️ Running Celery & Celery Beat
 
-Make sure Redis is running (either locally or remotely).
+### 1. Start Redis (locally or via Docker)
 
-### 1. Start Celery Worker
+```bash
+docker run -p 6379:6379 redis
+```
+
+### 2. Start Celery worker
 
 ```bash
 celery -A atax_reminder worker --loglevel=info
 ```
 
-### 2. Start Celery Beat (for periodic/scheduled tasks)
+### 3. Start Celery Beat
 
 ```bash
 celery -A atax_reminder beat --loglevel=info
@@ -142,40 +174,22 @@ celery -A atax_reminder beat --loglevel=info
 
 ## ✉️ Sending Email Reminders
 
-You can define a Celery task in `notifications/tasks.py` like:
-
 ```python
-from celery import shared_task
-from django.core.mail import send_mail
-from django.conf import settings
-
 @shared_task
 def send_reminder_email(to_email, subject, message):
-    send_mail(
-        subject,
-        message,
-        settings.EMAIL_HOST_USER,
-        [to_email],
-        fail_silently=False,
-    )
+    send_mail(subject, message, settings.EMAIL_HOST_USER, [to_email])
 ```
 
 ---
 
-## 📲 Sending SMS Reminders
-
-Example SMS task using Twilio:
+## 📲 Sending SMS Reminders with Twilio
 
 ```python
-from celery import shared_task
-from twilio.rest import Client
-from django.conf import settings
-
 @shared_task
-def send_reminder_sms(to_number, body):
+def send_reminder_sms(to_number, message):
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     client.messages.create(
-        body=body,
+        body=message,
         from_=settings.TWILIO_PHONE_NUMBER,
         to=to_number
     )
@@ -183,7 +197,7 @@ def send_reminder_sms(to_number, body):
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Run Tests
 
 ```bash
 python manage.py test
@@ -193,13 +207,13 @@ python manage.py test
 
 ## 🐳 Docker Support (Coming Soon)
 
-Docker and docker-compose support will be added to simplify running the full stack including Django, Redis, and PostgreSQL.
+We'll be adding a `docker-compose.yml` file to run PostgreSQL, Redis, Django, Celery, and Celery Beat together.
 
 ---
 
 ## 🤝 Contributing
 
-Feel free to fork this repo, submit PRs, or open issues for improvements and features.
+Feel free to fork, raise issues, or open pull requests!
 
 ---
 
@@ -208,8 +222,3 @@ Feel free to fork this repo, submit PRs, or open issues for improvements and fea
 **Developer:** Kouawou Alex  
 **Email:** kouawoualex1234@gmail.com  
 
----
-
-## 📄 License
-
-This project is licensed under the MIT License.

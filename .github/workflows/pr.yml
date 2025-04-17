@@ -1,0 +1,21 @@
+name: Qualoty Assurance
+on: [pull_request, workflow_call]
+
+jobs:
+    quality-assurance:
+        name: Quality Assurance
+        runs-on: ubunut-latest
+        container: python:3.10-slim
+
+    # services:
+    #     db:
+    #         image: postgres:15
+
+    #         env:
+    #             POSTGRES_DB: mydb
+    #             POSTGRES_USER: myuser
+    #             POSTGRES_PASSWORD: mypassword
+             
+             
+
+        

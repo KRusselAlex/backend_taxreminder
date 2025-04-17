@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   db:
@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -19,15 +19,17 @@ services:
     container_name: redis_broker
     restart: always
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
   web:
     build: .
     container_name: django_app
+    restart: always
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "python manage.py makemigrations && 
+              python manage.py migrate &&
              python manage.py collectstatic --noinput &&
-             gunicorn myproject.wsgi:application --bind 0.0.0.0:8000"
+             gunicorn backend_taxreminder.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -41,23 +43,29 @@ services:
   celery_worker:
     build: .
     container_name: celery_worker
-    command: celery -A myproject worker --loglevel=info
+    restart: always
+    command: celery -A backend_taxreminder worker --loglevel=info
     volumes:
       - .:/app
     depends_on:
       - web
       - redis
+    env_file:
+      - .env
 
   celery_beat:
     build: .
     container_name: celery_beat
-    command: celery -A myproject beat --loglevel=info
+    restart: always
+    command: celery -A backend_taxreminder beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
       - .:/app
     depends_on:
       - web
       - redis
       - celery_worker
+    env_file:
+      - .env
 
 volumes:
   postgres_data:

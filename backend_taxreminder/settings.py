@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'notifications',
     'rest_framework',
     'django_celery_beat',
+    'django_extensions',
     'rest_framework_simplejwt',
     'drf_yasg',
     'celery',
@@ -102,20 +103,20 @@ WSGI_APPLICATION = 'backend_taxreminder.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'mydatabase',
-#         'USER': 'alex',
-#         'PASSWORD': 'mypassword',
-#         'HOST': 'localhost', 
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'), 
+        'PORT': os.getenv('DATABASE_PORT'),
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+# }
 
 
 AUTH_PASSWORD_VALIDATORS = [

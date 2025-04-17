@@ -68,6 +68,7 @@ class ClientCreateView(generics.ListCreateAPIView):
     
     def get(self, request, *args, **kwargs):
         try:
+            print("i am here")
             clients = self.get_queryset()
             serializer = self.get_serializer(clients, many=True)
             return format_response(

@@ -4,7 +4,7 @@
 ![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
 
 
-# 📧 Atax Reminder Backend
+# 📧 backend_taxReminder Backend
 
 Atax Reminder is a backend service built to automate and schedule **payment reminders** via **Email** and **SMS**. It offers a robust RESTful API using **Django REST Framework** for client and reminder management. The system handles background jobs using **Celery** and **Celery Beat**, powered by **Redis**. PostgreSQL serves as the primary database. **Twilio** is used for SMS delivery and **Gmail SMTP** for emails.
 
@@ -27,14 +27,35 @@ Atax Reminder is a backend service built to automate and schedule **payment remi
 ## 📁 Project Structure
 
 ```
-atax_reminder/
+backend_taxreminder/
 │
-├── atax_reminder/       # Django project config
+├── backend_taxreminder/       # Django project config
 │   ├── settings.py
 │   ├── celery.py
 │   └── __init__.py
 │
-├── reminders/           # Core app
+├── notifications/           # Core app
+│   ├── models.py
+│   ├── serializers.py   # DRF serializers
+│   ├── views.py         # API views
+│   ├── urls.py          # API routes
+│   ├── tasks.py         # Celery tasks for email/SMS
+│   └── admin.py
+├── clients/           # Core app
+│   ├── models.py
+│   ├── serializers.py   # DRF serializers
+│   ├── views.py         # API views
+│   ├── urls.py          # API routes
+│   ├── tasks.py         # Celery tasks for email/SMS
+│   └── admin.py
+├── users/           # Core app
+│   ├── models.py
+│   ├── serializers.py   # DRF serializers
+│   ├── views.py         # API views
+│   ├── urls.py          # API routes
+│   ├── tasks.py         # Celery tasks for email/SMS
+│   └── admin.py
+├── reports/           # Core app
 │   ├── models.py
 │   ├── serializers.py   # DRF serializers
 │   ├── views.py         # API views
